@@ -16,9 +16,9 @@ module S3Multipart
       p response = Http.post(url, {headers: headers})
       p parsed_response_body = XmlSimple.xml_in(response.body)
 
-      p { "key"  => parsed_response_body["Key"][0],
-               "upload_id"   => parsed_response_body["UploadId"][0],
-               "name" => real_name }
+      p parsed_response_body["Key"][0]
+      p parsed_response_body["UploadId"][0]
+      p real_name
       return { "key"  => parsed_response_body["Key"][0],
                "upload_id"   => parsed_response_body["UploadId"][0],
                "name" => real_name }
