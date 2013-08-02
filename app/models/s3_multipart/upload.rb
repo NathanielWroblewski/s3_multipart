@@ -1,5 +1,5 @@
 module S3Multipart
-  class Upload < ::ActiveRecord::Base
+  class Upload < ActiveRecord::Base
     extend S3Multipart::TransferHelpers
 
     attr_accessible :key, :upload_id, :name, :location, :uploader, :size
