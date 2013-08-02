@@ -7,11 +7,15 @@ module S3Multipart
     def initiate(options)
       p 'initiate'
       p real_name = options[:object_name]
+      p type = options[:content_type]
       p unique_name = UUID.generate + real_name.match(/.[A-Za-z0-9]+$/)[0] # clean this up later
       p url = "/#{unique_name}?uploads"
 
       p headers = {content_type: options[:content_type]}
-      p headers[:authorization], headers[:date] = sign_request(verb: 'POST', url: url, content_type: (options[:content_type]))
+      p blah = sign_request(verb: 'POST', url: url, content_type: type)
+      # p headers[:authorization], headers[:date] = sign_request(verb: 'POST', url: url, content_type: (options[:content_type]))
+      p headers[:authorization] = blah[0]
+      p headers[:date] = blah[1]
 
       p response = Http.post(url, {headers: headers})
       p parsed_response_body = XmlSimple.xml_in(response.body)
