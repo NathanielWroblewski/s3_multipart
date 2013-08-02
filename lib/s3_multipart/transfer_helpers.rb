@@ -11,7 +11,7 @@ module S3Multipart
       p url = "/#{unique_name}?uploads"
 
       p headers = {content_type: options[:content_type]}
-      p headers[:authorization], headers[:date] = sign_request verb: 'POST', url: url, content_type: options[:content_type]
+      p headers[:authorization], headers[:date] = sign_request(verb: 'POST', url: url, content_type: (options[:content_type]))
 
       p response = Http.post(url, {headers: headers})
       p parsed_response_body = XmlSimple.xml_in(response.body)
