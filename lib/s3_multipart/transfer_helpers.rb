@@ -13,7 +13,7 @@ module S3Multipart
       p headers = {content_type: options[:content_type]}
       p headers[:authorization], headers[:date] = sign_request verb: 'POST', url: url, content_type: options[:content_type]
 
-      p response = Http.post url, {headers: headers}
+      p response = Http.post(url, {headers: headers})
       p parsed_response_body = XmlSimple.xml_in(response.body)
 
       p return { "key"  => parsed_response_body["Key"][0],
