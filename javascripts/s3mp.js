@@ -31,7 +31,7 @@ function S3MP(options) {
             uploadObj.parts[j].activate();
           }
           S3MP.handler.startProgressTimer(key);
-          S3MP.onStart(uploadObj); // This probably needs to go somewhere else. 
+          S3MP.onStart(uploadObj); // This probably needs to go somewhere else.
         }
       }
       return beginUpload;
@@ -52,7 +52,7 @@ function S3MP(options) {
       ETag = finished_part.xhr.getResponseHeader("ETag");
       uploadObj.Etags.push({ ETag: ETag.replace(/\"/g, ''), partNum: finished_part.num });
 
-      // Increase the uploaded count and delete the finished part 
+      // Increase the uploaded count and delete the finished part
       uploadObj.uploaded += finished_part.size;
       uploadObj.inprogress[finished_part.num] = 0;
       i = _.indexOf(parts, finished_part);
@@ -65,12 +65,12 @@ function S3MP(options) {
             return true;
           }
         });
-        if (i !== -1){ 
+        if (i !== -1){
           parts[i].activate();
         }
       }
 
-      // If no parts remain then the upload has finished 
+      // If no parts remain then the upload has finished
       if (!parts.length) {
         this.onComplete(uploadObj);
       }
@@ -79,7 +79,7 @@ function S3MP(options) {
     // called when all parts have successfully uploaded
     onComplete: function(uploadObj) {
       var key = _.indexOf(S3MP.uploadList, uploadObj);
-      
+
       // Stop the onprogress timer
       this.clearProgressTimer(key);
 
@@ -96,7 +96,7 @@ function S3MP(options) {
 
     // Called by progress_timer
     onProgress: function(key, size, done, percent, speed) {
-      S3MP.onProgress(key, size, done, percent, speed);          
+      S3MP.onProgress(key, size, done, percent, speed);
     },
 
     startProgressTimer: function() {
@@ -143,7 +143,7 @@ function S3MP(options) {
   _.each(files, function(file, key) {
     if (file.size < 5000000) {
       return S3MP.onError({name: "FileSizeError", message: "File size is too small"})
-      // This should still work. The multipart API just can't be used b/c Amazon doesn't allow 
+      // This should still work. The multipart API just can't be used b/c Amazon doesn't allow
       // multipart file uploads that are less than 5 mb in size.
     }
 
@@ -204,14 +204,14 @@ S3MP.prototype.completeMultipart = function(uploadObj, cb) {
 // the site server, and send the request.
 S3MP.prototype.deliverRequest = function(xhr, body, cb) {
   var self = this;
-  
+
   xhr.onload = function() {
     response = JSON.parse(this.responseText);
-    if (response.error) { 
+    if (response.error) {
       return self.onError({
         name: "ServerResponse",
         message: "The server responded with an error"
-      });  
+      });
     }
     cb(response);
   };
@@ -230,12 +230,12 @@ S3MP.prototype.createXhrRequest = function() {
   var xhrRequest;
 
   // Sniff for xhr object
-  if (typeof XMLHttpRequest.constructor === "function") { 
+  if (typeof XMLHttpRequest.constructor === "function") {
     xhrRequest = XMLHttpRequest;
   } else if (typeof XDomainRequest !== "undefined") {
     xhrRequest = XDomainRequest;
   } else {
-    xhrRequest = null; // Error out to the client (To-do) 
+    xhrRequest = null; // Error out to the client (To-do)
   }
 
   return function(method, url, cb, open) { // open defaults to true
@@ -245,18 +245,18 @@ S3MP.prototype.createXhrRequest = function() {
     if (typeof args[0] === "undefined") {
       cb = null;
       open = false;
-    } 
+    }
 
     xhr = new xhrRequest();
     if (open) { // open the request unless specified otherwise
-      xhr.open(method, url, true); 
+      xhr.open(method, url, true);
     }
     xhr.onreadystatechange = cb;
 
     return xhr;
   };
 
-}();    
+}();
 
 S3MP.prototype.sliceBlob = function() {
   try {
@@ -287,7 +287,7 @@ S3MP.prototype._returnUploadObj = function(key) {
   var uploadObj = _.find(this.uploadList, function(uploadObj) {
     return uploadObj.key === key;
   });
-  return uploadObj;   
+  return uploadObj;
 };
 
 // cancel a given file upload
@@ -304,7 +304,7 @@ S3MP.prototype.cancel = function(key) {
 // pause a given file upload
 S3MP.prototype.pause = function(key) {
   var uploadObj = this._returnUploadObj(key);
-  
+
   _.each(uploadObj.parts, function(part, key, list) {
     if (part.status == "active") {
       part.pause();
@@ -317,12 +317,12 @@ S3MP.prototype.pause = function(key) {
 // resume a given file upload
 S3MP.prototype.resume = function(key) {
   var uploadObj = this._returnUploadObj(key);
-  
+
   _.each(uploadObj.parts, function(part, key, list) {
     if (part.status == "paused") {
       part.activate();
     }
   });
 
-  this.onResume();          
+  this.onResume();
 };

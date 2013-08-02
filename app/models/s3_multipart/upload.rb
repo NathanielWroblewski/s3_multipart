@@ -6,8 +6,10 @@ module S3Multipart
     before_create :validate_file_type, :validate_file_size
 
     def self.create(params)
+      p 'create'
+      p params
       response = initiate(params)
-      super(key: response["key"], upload_id: response["upload_id"], name: response["object_name"], uploader: params["uploader"], size: params["content_size"])
+      super(key: response["key"], upload_id: response["upload_id"], name: response["name"], uploader: params["uploader"], size: params["content_size"])
     end
 
     def execute_callback(stage, session)
