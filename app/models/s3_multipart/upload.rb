@@ -7,12 +7,12 @@ module S3Multipart
 
     def self.create(params)
       response = initiate(params)
-      super(key: response["key"], upload_id: response["upload_id"], name: response["name"], uploader: params["uploader"], size: params["content_size"])
+      super(key: response["key"], upload_id: response["upload_id"], name: response["object_name"], uploader: params["uploader"], size: params["content_size"])
     end
 
     def execute_callback(stage, session)
       controller = deserialize(uploader)
-      
+
       case stage
       when :begin
         controller.on_begin_callback.call(self, session) if controller.on_begin_callback
@@ -27,7 +27,7 @@ module S3Multipart
         size = self.size
         limits = deserialize(self.uploader).size_limits
         raise FileSizeError, "File size is too small" if limits[:min] > size
-        raise FileSizeError, "File size is too large" if limits[:max] < size 
+        raise FileSizeError, "File size is too large" if limits[:max] < size
       end
 
       def validate_file_type
