@@ -9,7 +9,7 @@ module S3Multipart
       p 'create'
       p params
       p response = initiate(params)
-      p (key: response["key"], upload_id: response["upload_id"], name: response["name"], uploader: params["uploader"], size: params["content_size"])
+      p {key: response["key"], upload_id: response["upload_id"], name: response["name"], uploader: params["uploader"], size: params["content_size"]}
       super(key: response["key"], upload_id: response["upload_id"], name: response["name"], uploader: params["uploader"], size: params["content_size"])
     end
 
