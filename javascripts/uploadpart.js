@@ -1,4 +1,4 @@
-// Upload part constructor 
+// Upload part constructor
 function UploadPart(blob, key, upload) {
   var part, xhr;
 
@@ -23,7 +23,7 @@ function UploadPart(blob, key, upload) {
 
 };
 
-UploadPart.prototype.activate = function() { 
+UploadPart.prototype.activate = function() {
   this.xhr.send(this.blob);
   this.status = "active";
 };

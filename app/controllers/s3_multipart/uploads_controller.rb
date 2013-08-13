@@ -2,19 +2,16 @@ module S3Multipart
   class UploadsController < ApplicationController
 
     def create
-      puts "create"
       begin
-        p 'upload'
-        p params
-        p upload = Upload.create(params)
-        p upload.execute_callback(:begin, session)
-        p response = upload.to_json
+        upload = Upload.create(params)
+        upload.execute_callback(:begin, session)
+        response = upload.to_json
       rescue FileTypeError, FileSizeError => e
-        p response = {error: e.message}
+        response = {error: e.message}
       rescue
-        p response = {error: 'There was an error initiating the upload'}
+        response = {error: 'There was an error initiating the upload'}
       ensure
-        p render :json => response
+        render :json => response
       end
     end
 
